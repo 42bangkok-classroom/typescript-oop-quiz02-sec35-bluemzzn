@@ -21,7 +21,7 @@ interface filterdPost {
   totalComments: number;
 }
 
-export async function getPostsByUser(): Promise<filterdPost[]> {
+export async function mapPostWithCommentCount(): Promise<filterdPost[]> {
   try {
     const [postsResponse, commentsResponse] = await Promise.all([
       axios.get<Post[]>('https://jsonplaceholder.typicode.com/posts'),
