@@ -1,10 +1,9 @@
 import axios from 'axios';
-import { title } from 'node:process';
 
 interface Post {
-  userId?: number;
   id: number;
   title: string;
+  userId: number;
   body?: string;
 }
 
@@ -13,23 +12,14 @@ interface EdgePost {
   title: string;
 }
 
-export async function getEdgePosts(): Promise<EdgePost[]> {
+export async function getPostsByUser(userId: number): Promise<EdgePost[]> {
   try {
-    const res = await axios.get<Post[]>("https://jsonplaceholder.typicode.com/posts");
-    const posts = res.data;
-
-    if (posts.length === 0) {
-      return [];
-    }
-
-    const firstPost = posts[0];
-    const lastPost = posts[posts.length - 1];
-
-    return [
-      { id: firstPost.id, title: firstPost.title },
-      { id: lastPost.id, title: lastPost.title }
-    ].map(post => ({ id: post.id, title: post.title }))
-
+    const response = await axios.get<Post[]>('https://jsonplaceholder.typicode.com/posts');
+    const posts = response.data;
+    
+    return posts
+      .filter(post => post.userId === userId)
+      .map(post => ({ id: post.id, title: post.title }));
   } catch (error) {
     throw new Error(`Failed to fetch posts: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
