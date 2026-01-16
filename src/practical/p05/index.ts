@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 interface Comment {
   commentId: number;
   id: number;
@@ -14,11 +13,11 @@ interface FilterComment {
   body: string;
 }
 
-export async function safeFetchComment(): Promise<FilterComment[] | null> {
-  const res = await axios.get<Comment[]>('https://jsonplaceholder.typicode.com/comments/{id}');
-  const comments = res.data;
+export async function safeFetchComment(commentId : number): Promise<FilterComment | null> {
   try {
-    const { id, body } = comment;
+    const res = await axios.get<Comment>(`https://jsonplaceholder.typicode.com/comments/${commentId}`);
+    const comments = res.data;
+    const { id, body } = comments;
 
     return { id, body };
   } catch (error) {
